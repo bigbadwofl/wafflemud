@@ -3,7 +3,7 @@ var colorString = require('./colorString');
 var messages = {
 	welcome: {
 		fg: 'orange',
-		msg: 'Welcome to the MUD\n'
+		msg: 'Welcome to the Waffle MUD\n'
 	},
 	end: {
 		fg: 'green',

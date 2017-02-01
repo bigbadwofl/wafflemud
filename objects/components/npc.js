@@ -1,5 +1,5 @@
 module.exports = {
-	roamChance: 0.1,
+	roamChance: 0.01,
 
 	doRoam: false,
 

@@ -15,6 +15,7 @@ module.exports = {
 			name: 'player',
 
 			components: {
+				combat: {},
 				actor: {},
 				player: {},
 				inventory: {},

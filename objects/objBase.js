@@ -41,6 +41,8 @@ module.exports = {
 	},
 
 	executeCommand: function(text) {
+		var splitCommand = text.split(' ');
+
 		var components = this.components;
 		var cLen = components.length;
 		for (var i = 0; i < cLen; i++) {
@@ -54,9 +56,9 @@ module.exports = {
 			for (var com in commands) {
 				var command = commands[com];
 
-				var match = (com == text);
+				var match = (com == splitCommand[0]);
 				if ((!match) && (command.aliases))
-					match = command.aliases.some(a => (a == text));
+					match = command.aliases.some(a => (a == splitCommand[0]));
 
 				if (match) {
 					command.execute.call(c, text);
