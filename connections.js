@@ -19,7 +19,12 @@ module.exports = {
 				actor: {},
 				player: {},
 				inventory: {},
-				stats: {}
+				stats: {
+					values: {
+						hp: 1,
+						hpMax: 1
+					}
+				}
 			}
 		});
 
@@ -36,6 +41,9 @@ module.exports = {
 	},
 
 	disconnect: function(socket) {
-		this.list.spliceWhere(s => s == socket);
+		var player = this.list.find(l => (l.socket == socket));
+		this.list.spliceWhere(l => (l == player));
+
+		world.removeFromRoom(player);
 	}
 };

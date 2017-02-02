@@ -23,10 +23,23 @@ module.exports = {
 	3: {
 		blueprint: 2,
 		exits: {
-			w: 0
+			w: 0,
+			d: 4
 		},
 		mobs: {
 			1: {}
+		}
+	},
+	4: {
+		blueprint: 3,
+		exits: {
+			u: 3
+		},
+		objects: {
+			0: {}
+		},
+		flags: {
+			altar: true
 		}
 	}
 };

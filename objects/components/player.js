@@ -9,7 +9,7 @@ module.exports = {
 		this.sendMessage(this.obj.getRoom());
 	},
 
-	sendMessage: function(message, ignoreHud) {
+	sendMessage: function(message) {
 		messenger.send(this.obj.socket, message);
 	},
 

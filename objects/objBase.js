@@ -40,7 +40,7 @@ module.exports = {
 		world.addToRoom(this);
 	},
 
-	executeCommand: function(text) {
+	executeCommand: function(text, source) {
 		var splitCommand = text.split(' ');
 
 		var components = this.components;
@@ -51,8 +51,6 @@ module.exports = {
 			if (!commands)
 				continue;
 
-			var executed = false;
-
 			for (var com in commands) {
 				var command = commands[com];
 
@@ -61,14 +59,14 @@ module.exports = {
 					match = command.aliases.some(a => (a == splitCommand[0]));
 
 				if (match) {
-					command.execute.call(c, text);
-					executed = true;
+					command.execute.call(c, text, source);
+					return true;
 				}
 			}
-
-			if (executed)
-				break;
 		}
+
+		if (!source)
+			require('./objects').executeCommand(text, this);
 	},
 
 	queueCommand: function(command) {
@@ -77,6 +75,25 @@ module.exports = {
 
 	dequeueCommand: function() {
 		return this.queue.pop();
+	},
+
+	fireEvent: function(event) {
+		var args = [].slice.call(arguments, 1);
+
+		var components = this.components;
+		var cLen = components.length;
+		for (var i = 0; i < cLen; i++) {
+			var cpn = components[i];
+			var events = cpn.events;
+			if (!events)
+				continue;
+
+			var callback = events[event];
+			if (!callback)
+				continue;
+
+			callback.apply(cpn, args);
+		}
 	},
 
 	update: function() {

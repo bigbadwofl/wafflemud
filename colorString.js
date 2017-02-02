@@ -6,7 +6,8 @@ var colors = {
 	red: [5, 0, 0],
 	orange: [5, 1, 0],
 	green: [2, 4, 0],
-	cyan: [0, 4, 4]
+	cyan: [0, 4, 4],
+	yellow: [4, 4, 0]
 };
 
 module.exports = {

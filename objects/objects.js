@@ -1,4 +1,5 @@
 var objBase = require('./objBase');
+var world = require('../world/world');
 
 module.exports = {
 	objects: [],
@@ -22,6 +23,21 @@ module.exports = {
 		return obj;
 	},
 
+	executeCommand: function(command, source) {
+		var objects = this.objects;
+		var oLen = objects.length;
+		for (var i = 0; i < oLen; i++) {
+			var o = objects[i];
+			if (
+				(o == source) ||
+				(o.zone != source.zone) ||
+				(o.room != source.room)
+			) continue;
+			if (o.executeCommand(command, source))
+				return;
+		}
+	},
+
 	update: function() {
 		var objects = this.objects;
 		var oLen = objects.length;
@@ -29,6 +45,7 @@ module.exports = {
 			var o = objects[i];
 			o.update();
 			if (o.destroyed) {
+				world.removeFromRoom(o);
 				objects.splice(i, 1);
 				i--;
 				oLen--;

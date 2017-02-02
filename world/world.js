@@ -9,11 +9,12 @@ module.exports = {
 	},
 
 	buildZone: function(zoneNum) {
-		var objects = require('../objects/objects');
+		var builder = require('../objects/objects');
 
 		var configZone = require('./config/' + zoneNum + '/zone');
 		var configRooms = require('./config/' + zoneNum + '/room');
 		var configMobs = require('./config/' + zoneNum + '/mob');
+		var configObjects = require('./config/' + zoneNum + '/object');
 
 		var zone = this.zones[zoneNum] = {};
 
@@ -32,11 +33,18 @@ module.exports = {
 				var mob = mobs[m];
 				var mobInfo = configMobs[(mob.blueprint == null) ? m : mob.blueprint];
 
-				var builtMob = objects.build(extend(true, {
+				var builtMob = builder.build(extend(true, {
 					zone: zoneNum,
 					room: r,
 					components: {
 						actor: {},
+						combat: {},
+						stats: {
+							values: {
+								hp: 5,
+								hpMax: 5
+							}
+						},
 						npc: {}
 					}
 				}, mobInfo, mob));
@@ -45,6 +53,22 @@ module.exports = {
 					builtRoom.contents = [];
 
 				builtRoom.contents.push(builtMob);
+			}
+
+			var objects = room.objects || {};
+			for (var o in objects) {
+				var object = objects[o];
+				var objectInfo = configObjects[(object.blueprint == null) ? o : o.blueprint];
+
+				var builtObject = builder.build(extend(true, {
+					zone: zoneNum,
+					room: r,
+				}, objectInfo, object));
+
+				if (!builtRoom.contents)
+					builtRoom.contents = [];
+
+				builtRoom.contents.push(builtObject);
 			}
 
 			zone[r] = builtRoom;
@@ -58,9 +82,11 @@ module.exports = {
 
 		room.contents.spliceWhere(c => (c == obj));
 
-		room.contents
-			.filter(c => !!c.player)
-			.forEach(c => c.player.sendMessage(obj.name + ' left'))
+		if (!obj.destroyed) {
+			room.contents
+				.filter(c => !!c.player)
+				.forEach(c => c.player.sendMessage(obj.name + ' left'))
+		}
 	},
 
 	addToRoom: function(obj) {
@@ -88,7 +114,10 @@ module.exports = {
 				if (c == ignoreObject)
 					return;
 
-				result += colorString.format(c.name, 'green') + '\n';
+				var color = 'green';
+				if (!c.actor)
+					color = 'yellow';
+				result += colorString.format(c.name, color) + '\n';
 			});
 		}
 

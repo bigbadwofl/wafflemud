@@ -10,5 +10,9 @@ module.exports = {
 	2: {
 		name: `Room C`,
 		desc: `This is Googz's special room. Don't stay too long.`
+	},
+	3: {
+		name: `Googz's Basement`,
+		desc: `The room is filled with scented candles and strange magazines. Every surface is covered with the word 'hiz'; deep scratches.`
 	}
 };
